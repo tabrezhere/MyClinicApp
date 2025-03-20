@@ -1,0 +1,35 @@
+@page "/receptionist/patientdetails"
+@using ClinicManagementSystem.Shared.DTOs
+@using System.Net.Http.Json
+@inject HttpClient Http
+
+<h3>Patient Details</h3>
+
+@if (patient == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div>
+        <h4>@patient.Name</h4>
+        <p><strong>Age:</strong> @patient.Age</p>
+        <p><strong>Gender:</strong> @patient.Gender</p>
+        <p><strong>Mobile Number:</strong> @patient.MobileNumber</p>
+        <p><strong>Blood Pressure Reading:</strong> @patient.BPReading</p>
+        <p><strong>Diabetes Status:</strong> @(patient.DiabetesStatus ? "Yes" : "No")</p>
+        <p><strong>Date of Registration:</strong> @patient.DateOfRegistration.ToShortDateString()</p>
+    </div>
+}
+
+@code {
+    private PatientDto patient;
+
+    [Parameter]
+    public int PatientId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        patient = await Http.GetFromJsonAsync<PatientDto>($"api/patient/{PatientId}");
+    }
+}

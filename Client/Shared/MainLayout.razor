@@ -1,0 +1,35 @@
+@inherits LayoutComponentBase
+
+<div class="main-layout">
+    <NavMenu />
+
+    <div class="content">
+        <div class="container">
+            @Body
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Clinic Management System</p>
+        </div>
+    </footer>
+</div>
+
+<style>
+    .main-layout {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    .content {
+        flex: 1;
+    }
+
+    footer {
+        background-color: #f8f9fa;
+        padding: 1rem;
+        text-align: center;
+    }
+</style>

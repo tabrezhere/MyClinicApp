@@ -1,0 +1,85 @@
+@page "/admin/manage-clinics"
+
+@using ClinicManagementSystem.Shared.DTOs
+@using System.Net.Http.Json
+@using Microsoft.AspNetCore.Components.Forms
+@inject HttpClient Http
+
+<h3>Manage Clinics</h3>
+
+@if (clinics == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <EditForm Model="newClinic" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-3">
+            <label for="clinicName" class="form-label">Clinic Name</label>
+            <InputText id="clinicName" class="form-control" @bind-Value="newClinic.ClinicName" required />
+        </div>
+
+        <div class="mb-3">
+            <label for="address" class="form-label">Address</label>
+            <InputText id="address" class="form-control" @bind-Value="newClinic.Address" required />
+        </div>
+
+        <div class="mb-3">
+            <label for="contactNumber" class="form-label">Contact Number</label>
+            <InputText id="contactNumber" class="form-control" @bind-Value="newClinic.ContactNumber" required />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Add Clinic</button>
+    </EditForm>
+
+    <h4>Existing Clinics</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Clinic Name</th>
+                <th>Address</th>
+                <th>Contact Number</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var clinic in clinics)
+            {
+                <tr>
+                    <td>@clinic.ClinicName</td>
+                    <td>@clinic.Address</td>
+                    <td>@clinic.ContactNumber</td>
+                    <td>
+                        <button class="btn btn-danger" @onclick="() => DeleteClinic(clinic.ClinicId)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<ClinicDto> clinics;
+    private ClinicDto newClinic = new ClinicDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        clinics = await Http.GetFromJsonAsync<List<ClinicDto>>("api/admin/clinics");
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        await Http.PostAsJsonAsync("api/admin/clinics", newClinic);
+        newClinic = new ClinicDto();
+        clinics = await Http.GetFromJsonAsync<List<ClinicDto>>("api/admin/clinics");
+    }
+
+    private async Task DeleteClinic(int clinicId)
+    {
+        await Http.DeleteAsync($"api/admin/clinics/{clinicId}");
+        clinics = await Http.GetFromJsonAsync<List<ClinicDto>>("api/admin/clinics");
+    }
+}

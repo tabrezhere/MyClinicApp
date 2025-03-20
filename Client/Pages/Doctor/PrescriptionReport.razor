@@ -1,0 +1,66 @@
+@page "/doctor/prescription-report/{patientId}"
+
+@using ClinicManagementSystem.Shared.DTOs
+@using System.Net.Http.Json
+@inject HttpClient Http
+@using global::Shared.DTOs
+
+<h3>Prescription Report</h3>
+
+@* @if (prescriptionReport == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div>
+        <h4>Patient Details</h4>
+        <p><strong>Name:</strong> @prescriptionReport.PatientName</p>
+        <p><strong>Age:</strong> @prescriptionReport.Age</p>
+        <p><strong>Gender:</strong> @prescriptionReport.Gender</p>
+        <p><strong>Mobile Number:</strong> @prescriptionReport.MobileNumber</p>
+
+        <h4>Prescription Details</h4>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Tablet Name</th>
+                    <th>Quantity</th>
+                    <th>Times Per Day</th>
+                    <th>Date Prescribed</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var prescription in prescriptionReport.Prescriptions)
+                {
+                    <tr>
+                        <td>@prescription.TabletName</td>
+                        <td>@prescription.Quantity</td>
+                        <td>@prescription.TimesPerDay</td>
+                        <td>@prescription.DatePrescribed.ToShortDateString()</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <button class="btn btn-primary" @onclick="PrintReport">Print Report</button>
+    </div> *@
+}
+
+@code {
+    [Parameter]
+    public string PatientId { get; set; }
+
+    // private PrescriptionReportDto prescriptionReport;
+
+
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     prescriptionReport = await Http.GetFromJsonAsync<PrescriptionReportDto>($"api/prescriptions/{PatientId}");
+    // }
+
+    private void PrintReport()
+    {
+        // Logic to print the report
+    }
+}

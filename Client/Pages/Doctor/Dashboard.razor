@@ -1,0 +1,52 @@
+@page "/doctor/dashboard"
+@using ClinicManagementSystem.Shared.DTOs
+@using System.Net.Http.Json
+@inject HttpClient Http
+
+<h3>Doctor Dashboard</h3>
+
+@if (patients == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (patients.Count == 0)
+{
+    <p>No patients found.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Patient Name</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Mobile Number</th>
+                <th>BP Status</th>
+                <th>Diabetes Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var patient in patients)
+            {
+                <tr>
+                    <td>@patient.Name</td>
+                    <td>@patient.Age</td>
+                    <td>@patient.Gender</td>
+                    <td>@patient.MobileNumber</td>
+                    <td>@patient.BPReading</td>
+                    <td>@patient.DiabetesStatus</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<PatientDto> patients;
+
+    protected override async Task OnInitializedAsync()
+    {
+        patients = await Http.GetFromJsonAsync<List<PatientDto>>("api/patient/latest");
+    }
+}

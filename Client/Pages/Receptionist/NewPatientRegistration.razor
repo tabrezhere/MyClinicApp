@@ -1,0 +1,78 @@
+@page "/receptionist/new-patient-registration"
+
+@using ClinicManagementSystem.Shared.DTOs
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Net.Http.Json
+@inject HttpClient Http
+
+<h3>New Patient Registration</h3>
+
+<EditForm Model="@newPatient" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="name">Name:</label>
+        <InputText id="name" class="form-control" @bind-Value="newPatient.Name" required />
+    </div>
+
+    <div class="form-group">
+        <label for="age">Age:</label>
+        <InputNumber id="age" class="form-control" @bind-Value="newPatient.Age" required />
+    </div>
+
+    <div class="form-group">
+        <label for="gender">Gender:</label>
+        <InputSelect id="gender" class="form-control" @bind-Value="newPatient.Gender" required>
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+        </InputSelect>
+    </div>
+
+    <div class="form-group">
+        <label for="mobileNumber">Mobile Number:</label>
+        <InputText id="mobileNumber" class="form-control" @bind-Value="newPatient.MobileNumber" required />
+    </div>
+
+    <div class="form-group">
+        <label for="bpReading">Blood Pressure Reading:</label>
+        <InputText id="bpReading" class="form-control" @bind-Value="newPatient.BPReading" required />
+    </div>
+
+    <div class="form-group">
+        <label for="diabetesStatus">Diabetes Status:</label>
+        <InputSelect id="diabetesStatus" class="form-control" @bind-Value="newPatient.DiabetesStatus" required>
+            <option value="">Select Status</option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </InputSelect>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Register Patient</button>
+</EditForm>
+
+@if (successMessage != null)
+{
+    <div class="alert alert-success mt-3">@successMessage</div>
+}
+
+@code {
+    private PatientDto newPatient = new PatientDto();
+    private string successMessage;
+
+    private async Task HandleValidSubmit()
+    {
+        var response = await Http.PostAsJsonAsync("api/patient", newPatient);
+        if (response.IsSuccessStatusCode)
+        {
+            successMessage = "Patient registered successfully!";
+            newPatient = new PatientDto(); // Reset the form
+        }
+        else
+        {
+            successMessage = "Error registering patient.";
+        }
+    }
+}
